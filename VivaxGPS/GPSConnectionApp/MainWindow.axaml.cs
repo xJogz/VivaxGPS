@@ -129,42 +129,43 @@ namespace GPSConnectionApp
                 string pingMessage = "ping";
                 byte[] pingData = Encoding.ASCII.GetBytes(pingMessage);
 
-                Console.WriteLine($"Envoi du message de ping à {ip}:{port}");
-                await _udpClient.SendAsync(pingData, pingData.Length);
-        
-                // Attendre une réponse du serveur
-                var result = await _udpClient.ReceiveAsync();
-                string response = Encoding.ASCII.GetString(result.Buffer);
-        
-                Console.WriteLine($"Réponse reçue : {response}");
-        
-                return response.Contains("pong"); 
+                // Créer un UdpClient local
+                using (UdpClient udpClient = new UdpClient())
+                {
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+                    await udpClient.SendAsync(pingData, pingData.Length, endPoint);  // Envoie le message
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erreur de connexion : {ex.Message}");
+                Console.WriteLine("Erreur lors de l'envoi du message de ping : " + ex.Message);
                 return false;
             }
         }
+
 
 
         private void ReceiveTrameAsync(string ip, int port)
         {
             try
             {
+                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);  // L'adresse locale et le port à écouter
+                _udpClient = new UdpClient(localEndPoint);  // Créer un UdpClient lié à ce port
+
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ip), port);
 
-                // Boucle de réception des trames
                 while (_isConnected)
                 {
-                    byte[] data = _udpClient.Receive(ref remoteEP); // Attend une trame
+                    byte[] data = _udpClient.Receive(ref remoteEP);  // Recevoir les données depuis la cible
 
                     string trame = Encoding.ASCII.GetString(data);
+
+                    // Sauvegarder la trame reçue dans un fichier
                     string cheminFichier = "trames_gps.txt";
-                    
-                    // Sauvegarde la trame dans un fichier texte
                     File.AppendAllText(cheminFichier, trame + Environment.NewLine);
-                    
+
                     Console.WriteLine("Trame reçue : " + trame);
                 }
             }
@@ -178,22 +179,20 @@ namespace GPSConnectionApp
 
 
 
+
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            _udpClient.Close();
-            _isConnected = false;
-
-            if (_isConnected == false)
+            if (_udpClient != null)
             {
-
-                _connectionStatus?.SetValue(TextBlock.TextProperty, "Non connecté");
+                _udpClient.Close();  // Ferme la connexion UDP et libère le port
+                _isConnected = false;
             }
-            
 
-     
+            _connectionStatus?.SetValue(TextBlock.TextProperty, "Non connecté");
+
             SaveSettings();
         }
+
     }
 }
 
