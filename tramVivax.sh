@@ -9,5 +9,5 @@ PORT="/tmp/vivax2"
 while true; do
     echo "LOG, LOC2, 14303, 8192, 0, 0, 71, 3, 2, 4, 140, 0" > $PORT
     echo "Trame envoyée : LOG, LOC2, 14303, 8192, 0, 0, 71, 3, 2, 4, 140, 0"
-    sleep 1  # Attente d'une seconde avant d'envoyer la prochaine trame
+    sleep 2  # Attente d'une seconde avant d'envoyer la prochaine trame
 done

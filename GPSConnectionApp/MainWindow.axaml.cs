@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using System;
 using System.IO;
 using System.IO.Ports;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -27,6 +28,14 @@ namespace GPSConnectionApp
         private bool _isConnected = false;
         private RadioButton? _gpsRadioButton;
         private RadioButton? _vivaxRadioButton;
+        
+        private string? lastGpsTrame = null;
+        private string? lastVivaxTrame = null;
+        private readonly object lockObj = new();
+        
+        private FileSystemWatcher _fileSystemWatcher;
+
+
 
    
         private const string SettingsFilePath = "connectionSettings.json";
@@ -41,6 +50,20 @@ namespace GPSConnectionApp
 
       
             LoadSettings();
+            
+            _fileSystemWatcher = new FileSystemWatcher
+            {
+                Path = Directory.GetCurrentDirectory(), 
+                Filter = "trames.txt",  
+                NotifyFilter = NotifyFilters.LastWrite  
+            };
+
+
+            _fileSystemWatcher.Changed += FileSystemWatcher_Changed;
+
+
+            _fileSystemWatcher.EnableRaisingEvents = true;
+
         }
 
 
@@ -189,21 +212,17 @@ namespace GPSConnectionApp
         {
             try
             {
-                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);  // L'adresse locale et le port à écouter
-                _udpClient = new UdpClient(localEndPoint);  // Créer un UdpClient lié à ce port
+                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
+                _udpClient = new UdpClient(localEndPoint);
 
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ip), port);
 
                 while (_isConnected)
                 {
-                    byte[] data = _udpClient.Receive(ref remoteEP);  // Recevoir les données depuis la cible
-
+                    byte[] data = _udpClient.Receive(ref remoteEP);
                     string trame = Encoding.ASCII.GetString(data);
 
-                    // Sauvegarder la trame reçue dans un fichier
-                    string cheminFichier = "trames.txt";
-                    File.AppendAllText(cheminFichier, trame + Environment.NewLine);
-
+                    HandleGpsTrame(trame); // ✅ nouvelle méthode
                     Console.WriteLine("Trame reçue : " + trame);
                 }
             }
@@ -212,6 +231,7 @@ namespace GPSConnectionApp
                 Console.WriteLine("Erreur de réception : " + ex.Message);
             }
         }
+
         
         private void ConnectVivax(string comPort)
         {
@@ -238,12 +258,8 @@ namespace GPSConnectionApp
             {
                 while (_vivaxPort.IsOpen)
                 {
-                    string trame = _vivaxPort.ReadLine(); 
-
-                    // Sauvegarder la trame reçue dans un fichier
-                    string cheminFichier = "trames.txt";
-                    File.AppendAllText(cheminFichier, trame + Environment.NewLine);
-
+                    string trame = _vivaxPort.ReadLine();
+                    HandleVivaxTrame(trame); 
                     Console.WriteLine("Trame reçue (Vivax) : " + trame);
                 }
             }
@@ -258,23 +274,110 @@ namespace GPSConnectionApp
 
 
 
+
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_udpClient != null)
+            try
             {
-                _udpClient.Close();  // Ferme la connexion UDP et libère le port
+                // Fermer la connexion UDP si elle est ouverte
+                if (_udpClient != null)
+                {
+                    _udpClient.Close();  // Ferme la connexion UDP et libère le port
+                    _udpClient = null;  // Assure que la connexion n'est pas réutilisée
+                    
+                    Console.WriteLine("Connexion UDP fermée.");
+                }
+
+                // Fermer la connexion Vivax si elle est ouverte
+                if (_vivaxPort != null && _vivaxPort.IsOpen)
+                {
+                    _vivaxPort.Close();  // Ferme la connexion Vivax et libère le port
+                    Console.WriteLine("Connexion Vivax fermée.");
+                }
+
+                // Mettre à jour le statut de la connexion dans l'interface utilisateur
+                _connectionStatus?.SetValue(TextBlock.TextProperty, "Non connecté");
                 _isConnected = false;
+                // Sauvegarder les paramètres
+                SaveSettings();
             }
-
-            if (_vivaxPort != null && _vivaxPort.IsOpen)
+            catch (Exception ex)
             {
-                _vivaxPort.Close();  // Ferme la connexion Vivax et libère le port
+                Console.WriteLine("Erreur lors de la déconnexion : " + ex.Message);
+                _connectionStatus?.SetValue(TextBlock.TextProperty, "Erreur lors de la déconnexion : " + ex.Message);
             }
-
-            _connectionStatus?.SetValue(TextBlock.TextProperty, "Non connecté");
-
-            SaveSettings();
         }
+
+
+
+        
+        
+        private void HandleGpsTrame(string trame)
+        {
+            lock (lockObj)
+            {
+                lastGpsTrame = trame.Trim();
+                TryFusionEtEcriture();
+            }
+        }
+
+        private void HandleVivaxTrame(string trame)
+        {
+            lock (lockObj)
+            {
+                lastVivaxTrame = trame.Trim();
+                TryFusionEtEcriture();
+            }
+        }
+
+        private void TryFusionEtEcriture()
+        {
+            if (lastGpsTrame != null && lastVivaxTrame != null)
+            {
+                string ligneFusionnee = $"{lastVivaxTrame}, {lastGpsTrame}";
+                File.AppendAllText("trames.txt", ligneFusionnee + Environment.NewLine);
+
+                // Réinitialise après avoir fusionné
+                lastGpsTrame = null;
+                lastVivaxTrame = null;
+            }
+        }
+        
+        private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+          
+            if (e.ChangeType == WatcherChangeTypes.Changed)
+            {
+            
+                InsertTrameIntoDatabase();
+            }
+        }
+        
+        private void InsertTrameIntoDatabase()
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines("trames.txt");
+                Console.WriteLine("Fichier trames.txt lu, nombre de lignes : " + lines.Length);
+
+                foreach (var line in lines)
+                {
+                    Console.WriteLine("Insertion de la ligne : " + line);
+                    DataBaseHelper.InsertTramesFromFile(line);  
+                }
+
+                _connectionStatus?.SetValue(TextBlock.TextProperty, "Trames insérées dans la base de données");
+            }
+            catch (Exception ex)
+            {
+                _connectionStatus?.SetValue(TextBlock.TextProperty, "Erreur d'insertion : " + ex.Message);
+            }
+        }
+
+
+
+
+
 
     }
 }

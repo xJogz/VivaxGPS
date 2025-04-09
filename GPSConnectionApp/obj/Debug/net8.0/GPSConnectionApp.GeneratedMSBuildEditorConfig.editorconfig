@@ -15,12 +15,12 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = GPSConnectionApp
-build_property.ProjectDir = /home/lucho/VivaxGPS/VivaxGPS/GPSConnectionApp/
+build_property.ProjectDir = /home/lucho/VivaxGPS/GPSConnectionApp/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 
-[/home/lucho/VivaxGPS/VivaxGPS/GPSConnectionApp/App.axaml]
+[/home/lucho/VivaxGPS/GPSConnectionApp/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/lucho/VivaxGPS/VivaxGPS/GPSConnectionApp/MainWindow.axaml]
+[/home/lucho/VivaxGPS/GPSConnectionApp/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

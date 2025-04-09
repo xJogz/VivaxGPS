@@ -25,12 +25,15 @@
 /home/lucho/.nuget/packages/harfbuzzsharp/7.3.0.3/lib/net6.0/HarfBuzzSharp.dll
 /home/lucho/.nuget/packages/microcom.runtime/0.11.0/lib/net5.0/MicroCom.Runtime.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/Microsoft.CSharp.dll
+/home/lucho/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.2/lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/home/lucho/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.2/lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/Microsoft.VisualBasic.Core.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/Microsoft.VisualBasic.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/Microsoft.Win32.Primitives.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/Microsoft.Win32.Registry.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/mscorlib.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/netstandard.dll
+/home/lucho/.nuget/packages/npgsql/9.0.3/lib/net8.0/Npgsql.dll
 /home/lucho/.nuget/packages/skiasharp/2.88.9/lib/net6.0/SkiaSharp.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/System.AppContext.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/8.0.14/ref/net8.0/System.Buffers.dll

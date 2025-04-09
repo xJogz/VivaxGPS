@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "F/neh7ki/jU=",
+  "dgSpecHash": "EDL9rKzG3J0=",
   "success": true,
-  "projectFilePath": "/home/lucho/VivaxGPS/VivaxGPS/GPSConnectionApp/GPSConnectionApp.csproj",
+  "projectFilePath": "/home/lucho/VivaxGPS/GPSConnectionApp/GPSConnectionApp.csproj",
   "expectedPackageFiles": [
     "/home/lucho/.nuget/packages/avalonia/11.2.6/avalonia.11.2.6.nupkg.sha512",
     "/home/lucho/.nuget/packages/avalonia.angle.windows.natives/2.1.22045.20230930/avalonia.angle.windows.natives.2.1.22045.20230930.nupkg.sha512",
@@ -26,6 +26,9 @@
     "/home/lucho/.nuget/packages/harfbuzzsharp.nativeassets.webassembly/7.3.0.3/harfbuzzsharp.nativeassets.webassembly.7.3.0.3.nupkg.sha512",
     "/home/lucho/.nuget/packages/harfbuzzsharp.nativeassets.win32/7.3.0.3/harfbuzzsharp.nativeassets.win32.7.3.0.3.nupkg.sha512",
     "/home/lucho/.nuget/packages/microcom.runtime/0.11.0/microcom.runtime.0.11.0.nupkg.sha512",
+    "/home/lucho/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.2/microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "/home/lucho/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.2/microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "/home/lucho/.nuget/packages/npgsql/9.0.3/npgsql.9.0.3.nupkg.sha512",
     "/home/lucho/.nuget/packages/runtime.linux-arm.runtime.native.system.io.ports/7.0.0/runtime.linux-arm.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
     "/home/lucho/.nuget/packages/runtime.linux-arm64.runtime.native.system.io.ports/7.0.0/runtime.linux-arm64.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
     "/home/lucho/.nuget/packages/runtime.linux-x64.runtime.native.system.io.ports/7.0.0/runtime.linux-x64.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
