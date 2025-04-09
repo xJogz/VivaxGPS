@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GPSConnectionApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0b932ca2103dba49dbf5dbd7e2792d532168d6d3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+721a792a04061cbeca27a6e16b492daf042be61b")]
 [assembly: System.Reflection.AssemblyProductAttribute("GPSConnectionApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GPSConnectionApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
